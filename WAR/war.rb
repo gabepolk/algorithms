@@ -3,6 +3,8 @@ class Card
   # Rank is the rank of the card, 2-10, J, Q, K, A
   # Value is the numeric value of the card, so J = 11, A = 14
   # Suit is the suit of the card, Spades, Diamonds, Clubs or Hearts
+  attr_reader :rank, :value, :suit
+
   def initialize(rank, value, suit)
     @rank = rank
     @value = value
@@ -12,9 +14,11 @@ end
 
 # TODO: You will need to complete the methods in this class
 class Deck
-  attr_accessor :deck
+  attr_accessor :deck, :store, :first_index
   def initialize
-    @deck = nil # Determine the best way to hold the cards
+    @deck = []
+    @store = []
+    @index = 0
   end
 
   # Given a card, insert it on the bottom your deck
@@ -24,17 +28,34 @@ class Deck
 
   # Mix around the order of the cards in your deck
   def shuffle # You can't use .shuffle!
-
+    @deck.size.times do |i|
+      j = rand(51)
+      @deck[i], @deck[j] = @deck[j], @deck[i]
+    end
   end
 
   # Remove the top card from your deck and return it
   def deal_card
-
+    if @store.count == 52
+      @deck = @store
+      @store.clear
+      @index = 0
+    end
+    @store << @deck[@index]
+    @deck[@index] = nil
+    @store[@index]
+    @index += 1
   end
 
   # Reset this deck with 52 cards
   def create_52_card_deck
-
+    ranks = %w{2 3 4 5 6 7 8 9 10 J Q K A}
+    suits = %w{Spades Hearts Diamonds Clubs}
+    suits.each do |suit|
+      ranks.each_with_index do |v, i|
+        @deck << Card.new( v, i + 2, suit )
+      end
+    end
   end
 
 end
